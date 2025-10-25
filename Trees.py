@@ -69,3 +69,77 @@ class BinarySearchTree:
             else:
                 temp = temp.right
         return False
+    
+    def r_contains(self, value):
+        """
+        Recursively checks if the binary search tree contains a specific value.
+        """
+        return self.__r_contains(self.root, value)
+
+    def __r_contains(self, node, value):
+        if node is None:
+            return False
+        
+        if value == node.value:
+            return True
+        elif value < node.value:
+            return self.__r_contains(node.left, value)
+        else:
+            return self.__r_contains(node.right, value)
+        
+    def r_insert(self, value):
+        """
+        Recursively inserts a value into the binary search tree.
+        """
+        if self.root is None:
+            self.root = Node(value)
+        
+        self.__r_insert(self.root, value)
+
+    def __r_insert(self, node, value):
+        if node is None:
+            return Node(value)
+        if value < node.value:
+            node.left = self.__r_insert(node.left, value)
+        elif value > node.value:
+            node.right = self.__r_insert(node.right, value)
+        
+        return node
+    
+    def r_delete(self, value):
+        """
+        Recursively deletes a value from the binary search tree.
+        """
+        self.root = self.__r_delete(self.root, value)
+    
+    def __r_delete(self, node, value):
+        """
+        Recursively deletes a value from the binary search tree.
+        """
+        if node is None:
+            return node
+        
+        if value < node.value:
+            node.left = self.__r_delete(node.left, value)
+        elif value > node.value:
+            node.right = self.__r_delete(node.right, value)
+        else:
+            if node.left is None:
+                return node.right
+            elif node.right is None:
+                return node.left
+            
+            temp = self.__min_value_node(node.right)
+            node.value = temp.value
+            node.right = self.__r_delete(node.right, temp.value)
+        
+        return node
+    
+    def __min_value_node(self, node):
+        """
+        Finds the node with the minimum value in a given subtree.
+        """
+        current = node
+        while current.left is not None:
+            current = current.left
+        return current
